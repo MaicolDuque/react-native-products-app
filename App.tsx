@@ -6,8 +6,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { Products } from "./pages/products";
 import { ProductsDetail } from "./pages/products-detail";
-import { Favorites } from "./pages/favorites/favorite-item/FavoriteItem";
 import { AppContextProvider } from "./context/useAppContext";
+import { Favorites } from "./pages/favorites";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
