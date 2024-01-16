@@ -1,6 +1,13 @@
-import { RouteProp, useRoute } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, View, Text } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  View,
+  Text,
+  Button,
+} from "react-native";
+import { FavoritesModal } from "../../components/FavoritesModal";
 
 type ParamList = {
   ProductsDetail: {
@@ -10,6 +17,8 @@ type ParamList = {
 
 export function ProductsDetail() {
   const route = useRoute<RouteProp<ParamList>>();
+  const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [product, setProduct] = useState<any>({});
   const { productId } = route.params;
@@ -21,6 +30,20 @@ export function ProductsDetail() {
       .then((data) => setProduct(data))
       .finally(() => setIsLoading(false));
   }, []);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return (
+          <Button
+            title="Add to favorites"
+            onPress={() => setModalVisible(true)}
+          />
+        );
+      },
+    });
+  }, []);
+
   if (isLoading) {
     return (
       <ActivityIndicator
@@ -30,6 +53,7 @@ export function ProductsDetail() {
       ></ActivityIndicator>
     );
   }
+
   return (
     <View style={styles.container}>
       <Text>{product.title}</Text>
@@ -37,6 +61,11 @@ export function ProductsDetail() {
       <Text>${product.price}</Text>
       <Text>{product.rating}</Text>
       <Text>{product.category}</Text>
+      <FavoritesModal
+        productId={product.id}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
     </View>
   );
 }
